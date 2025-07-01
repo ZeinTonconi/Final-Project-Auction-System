@@ -5,6 +5,7 @@ import {
   type GridRenderCellParams,
 } from "@mui/x-data-grid";
 import type { Bid } from "../interfaces/BidInterface";
+import { useTranslation } from "react-i18next";
 
 interface BidHistoryTableProps {
   bids: Bid[];
@@ -12,13 +13,14 @@ interface BidHistoryTableProps {
 
 export const BidHistoryTable = ({ bids }: BidHistoryTableProps) => {
 
-    console.log(bids[0])
+  const {t} = useTranslation();
+
   const columns: GridColDef<Bid>[] = [
-    { field: "id", headerName: "Bid ID", width: 90 },
+    { field: "id", headerName: `${t("bidTable.bid")} ID` , width: 90 },
 
     {
       field: "auction",
-      headerName: "Auction ID",
+      headerName: `${t("bidTable.auction")} ID`,
       width: 120,
       renderCell: (params) => (
         `${params.value.id}`
@@ -27,7 +29,7 @@ export const BidHistoryTable = ({ bids }: BidHistoryTableProps) => {
 
     {
       field: "amount",
-      headerName: "Your Bid",
+      headerName: `Your ${t("bidTable.bid")}`,
       width: 120,
       renderCell: (params) =>
         `$${(params.value ?? 0).toFixed(2)}`,
@@ -35,7 +37,7 @@ export const BidHistoryTable = ({ bids }: BidHistoryTableProps) => {
 
     {
       field: "timestamp",
-      headerName: "When",
+      headerName: t("bidTable.when"),
       flex: 1,
       renderCell: (params) => (
         `${new Date(params.value).toDateString()}`
@@ -44,7 +46,7 @@ export const BidHistoryTable = ({ bids }: BidHistoryTableProps) => {
 
     {
       field: "result",
-      headerName: "Result",
+      headerName: t("bidTable.result"),
       width: 140,
       renderCell: (params: GridRenderCellParams<any, Bid>) => {
         const bid = params.row;
@@ -55,14 +57,14 @@ export const BidHistoryTable = ({ bids }: BidHistoryTableProps) => {
           bid.amount === auc.currentPrice;
 
         if (auc.isActive) {
-          return <Typography>Pending</Typography>;
+          return <Typography>${t("bidTable.peding")}</Typography>;
         }
         return (
           <Typography
             color={won ? "success.main" : "text.secondary"}
             fontWeight={won ? "bold" : "normal"}
           >
-            {won ? "Won" : "Lost"}
+            {won ? t("bidTable.won") : t("bidTable.lost")}
           </Typography>
         );
       },

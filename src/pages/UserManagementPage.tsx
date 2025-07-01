@@ -10,88 +10,24 @@ import {
   FormControlLabel,
   Checkbox,
 } from "@mui/material";
-import { useEffect, useState } from "react";
 import { UsersTable } from "../components/UsersTable";
-import { type User } from "../interfaces/UserInterface";
-import {
-  createUserService,
-  deleteUserService,
-  getUsersService,
-  updateUserService,
-} from "../services/userService";
 import { FormDialog } from "../components/FormDialog";
-import { useFormik } from "formik";
-import * as Yup from "yup";
+import { useUserManagement } from "../hooks/useUserManagement";
+import { useTranslation } from "react-i18next";
 
 export default function UserManagementPage() {
-  const [openForm, setOpenForm] = useState(false);
+  const {
+    setOpenForm,
+    users,
+    handleDelete,
+    handleEdit,
+    setEditingUser,
+    formik,
+    openForm,
+    editingUser,
+  } = useUserManagement();
 
-  const [users, setUsers] = useState<User[]>([]);
-
-  const [editingUser, setEditingUser] = useState<User | null>(null);
-
-  const userSchema = Yup.object({
-    username: Yup.string().required("The username is required"),
-    name: Yup.string().required("The name is required"),
-    role: Yup.boolean(),
-    avatar: Yup.string(),
-  });
-
-  const formik = useFormik({
-    initialValues: {
-      avatar: "",
-      username: "",
-      name: "",
-      role: false,
-    },
-    validationSchema: userSchema,
-    onSubmit: async (values) => {
-      const user: User = {
-        ...editingUser,
-        ...values,
-        role: values.role ? "admin" : "user",
-      };
-
-      if (editingUser) {
-        const updatedUser = await updateUserService(user);
-        setUsers((prev) =>
-          prev.map((u) => (u.id === editingUser.id ? updatedUser : u))
-        );
-      } else {
-        const res = await createUserService(user);
-        setUsers((prev) => [...prev, res]);
-      }
-
-      setEditingUser(null);
-      setOpenForm(false);
-      formik.resetForm();
-    },
-  });
-
-  const fetchUsers = async () => {
-    const res = await getUsersService();
-    setUsers(res);
-  };
-
-  useEffect(() => {
-    fetchUsers();
-  }, []);
-
-  const handleEdit = (user: User) => {
-    setEditingUser(user);
-    formik.setValues({
-      avatar: user.avatar || "",
-      username: user.username,
-      name: user.name,
-      role: user.role === "admin",
-    });
-    setOpenForm(true);
-  };
-
-  const handleDelete = async (user: User) => {
-    await deleteUserService(user.id!);
-    setUsers((prev) => prev.filter((u) => u.id !== user.id));
-  };
+  const {t} = useTranslation()
 
   return (
     <Container>
@@ -101,14 +37,14 @@ export default function UserManagementPage() {
         alignItems="center"
         my={2}
       >
-        <Typography variant="h5">User Management</Typography>
+        <Typography variant="h5">{t("userManagement.title")}</Typography>
         <Button
           variant="contained"
           onClick={() => {
             setOpenForm(true);
           }}
         >
-          Add User
+          {t("userManagement.addUser")}
         </Button>
       </Box>
 
@@ -123,7 +59,7 @@ export default function UserManagementPage() {
         onSubmit={formik.handleSubmit}
         open={openForm}
         title={
-          editingUser ? `Editing ${editingUser.username}` : "Creating a User"
+          editingUser ? `${t("userManagement.edit")} ${editingUser.username}` : t("userManagement.addUser")
         }
       >
         <Grid container spacing={2} alignItems="stretch">
@@ -134,7 +70,7 @@ export default function UserManagementPage() {
             <Stack spacing={2}>
               <TextField
                 fullWidth
-                label="Name"
+                label={t("userManagement.name")}
                 name="name"
                 value={formik.values.name}
                 onChange={formik.handleChange}
@@ -160,7 +96,7 @@ export default function UserManagementPage() {
                     onChange={formik.handleChange}
                   />
                 }
-                label="Is admin?"
+                label={t("userManagement.isAdmin")}
               />
             </Stack>
           </Grid>
@@ -176,7 +112,7 @@ export default function UserManagementPage() {
               flexGrow: 1,
             }}
           >
-            <Typography variant="subtitle1">Avatar Image</Typography>
+            <Typography variant="subtitle1">{t("userManagement.image")}</Typography>
 
             <Avatar
               variant="square"
@@ -185,7 +121,7 @@ export default function UserManagementPage() {
             />
 
             <Button variant="outlined" component="label">
-              Upload Image
+              {t("userManagement.upload")}
               <input
                 type="file"
                 hidden

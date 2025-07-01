@@ -2,6 +2,7 @@ import { Box, Paper, Stack, Typography } from "@mui/material";
 import { type Product } from "../interfaces/ProductInterface";
 import { type Auction } from "../interfaces/AuctionInterface";
 import { type Bid } from "../interfaces/BidInterface";
+import { useTranslation } from "react-i18next";
 
 interface ProductDetailsProps {
   product?: Product;
@@ -15,6 +16,8 @@ export const ProductDetails = ({
   winnerBid,
 }: ProductDetailsProps) => {
   if (!product || !auction) return <Typography>Loading product...</Typography>;
+
+  const {t} = useTranslation()
 
   return (
     <Paper sx={{ p: 2 }}>
@@ -32,30 +35,30 @@ export const ProductDetails = ({
         <Typography variant="h5">{product.title}</Typography>
         <Typography>{product.description}</Typography>
         <Typography>
-          <strong>Base Price:</strong> ${product.basePrice}
+          <strong>{t("productDetails.base")}:</strong> ${product.basePrice}
         </Typography>
         <Typography>
-          <strong>Current Price:</strong> ${auction.currentPrice}
+          <strong>{t("productDetails.current")}:</strong> ${auction.currentPrice}
         </Typography>
         <Typography>
-          <strong>Start:</strong> {new Date(auction.startTime).toLocaleString()}
+          <strong>{t("productDetails.start")}:</strong> {new Date(auction.startTime).toLocaleString()}
         </Typography>
         <Typography>
-          <strong>End:</strong> {new Date(auction.endTime).toLocaleString()}
+          <strong>{t("productDetails.end")}:</strong> {new Date(auction.endTime).toLocaleString()}
         </Typography>
         {winnerBid && (
           <Box>
             <Typography variant="h6" color="success.main">
-              Winner
+              {t("productDetails.winner")}
             </Typography>
             <Typography>
-              <strong>User ID:</strong> {winnerBid.user?.name}
+              <strong>{t("productDetails.user")} ID:</strong> {winnerBid.user?.name}
             </Typography>
             <Typography>
-              <strong>Amount:</strong> ${winnerBid.amount}
+              <strong>{t("productDetails.amount")}:</strong> ${winnerBid.amount}
             </Typography>
             <Typography>
-              <strong>Time:</strong>{" "}
+              <strong>{t("productDetails.time")}:</strong>{" "}
               {new Date(winnerBid.timestamp).toLocaleString()}
             </Typography>
           </Box>

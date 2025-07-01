@@ -3,6 +3,7 @@ import { DataGrid, type GridColDef } from "@mui/x-data-grid";
 import EditIcon from "@mui/icons-material/Edit";
 import DeleteIcon from "@mui/icons-material/Delete";
 import type { User } from "../interfaces/UserInterface";
+import { useTranslation } from "react-i18next";
 
 interface UsersTableProps {
   users: User[];
@@ -11,10 +12,11 @@ interface UsersTableProps {
 }
 
 export const UsersTable = ({ users, onEdit, onDelete }: UsersTableProps) => {
+  const {t} = useTranslation()
   const columns: GridColDef[] = [
     {
       field: "avatar",
-      headerName: "Avatar",
+      headerName: t("userTable.avatar"),
       width: 100,
       sortable: false,
       filterable: false,
@@ -50,12 +52,12 @@ export const UsersTable = ({ users, onEdit, onDelete }: UsersTableProps) => {
     },
     {
       field: "name",
-      headerName: "Name",
+      headerName: t("userTable.name"),
       flex: 0.5,
     },
     {
       field: "role",
-      headerName: "Role",
+      headerName: t("userTable.role"),
       flex: 0.3,
       align: "center",
       renderCell: (params) => (
@@ -71,7 +73,7 @@ export const UsersTable = ({ users, onEdit, onDelete }: UsersTableProps) => {
     },
     {
       field: "actions",
-      headerName: "Actions",
+      headerName: t("userTable.actions"),
       width: 140,
       renderCell: (params) => (
         <>

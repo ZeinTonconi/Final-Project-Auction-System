@@ -1,5 +1,5 @@
-import {ChangeEvent, useState} from "react";
-import {Avatar, Badge, Container, IconButton, Stack, Tooltip, Typography} from "@mui/material";
+import {type ChangeEvent, useState} from "react";
+import {Avatar, Badge, IconButton, Stack, Typography} from "@mui/material";
 import {PhotoCamera} from "@mui/icons-material";
 
 interface AvatarUploadProps {
@@ -22,7 +22,7 @@ export const AvatarUpload = ({
             reader.onload = () => {
                 const dataUrl = reader.result as string;
                 setLocalAvatar(dataUrl);
-                onAvatarChange(dataUrl); // Notify parent (Login Page) to update Formik state
+                onAvatarChange(dataUrl);
             };
             reader.readAsDataURL(file);
         }

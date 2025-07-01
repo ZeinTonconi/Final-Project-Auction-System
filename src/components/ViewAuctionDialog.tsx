@@ -23,6 +23,7 @@ import { useAuctionsStore } from "../store/useAuctionStore";
 import { useUser } from "../contexts/userContext";
 import { updateAuctionService } from "../services/auctionService";
 import { useNavigate } from "react-router-dom";
+import { useTranslation } from "react-i18next";
 
 const BootstrapDialog = styled(Dialog)(({ theme }) => ({
   "& .MuiDialogContent-root": {
@@ -60,6 +61,8 @@ export const ViewAuctionDialog = ({
   const isUpcoming = Date.now() < new Date(auction.startTime).getTime();
   
   const navigate= useNavigate();
+
+  const {t} = useTranslation()
 
   return (
     <>
@@ -105,7 +108,7 @@ export const ViewAuctionDialog = ({
                   variant="contained" endIcon={<GavelIcon />}
                   onClick={() => navigate(`/bid-history/${auction.id}`)}
                 >
-                  {(!isActive && !isUpcoming) ? 'See The Bid' : "Place Youur Bid"}
+                  {(!isActive && !isUpcoming) ? t("viewAuction.see") : t("viewAuction.place")}
                 </Button>
               </Stack>
             </Grid>
@@ -113,7 +116,7 @@ export const ViewAuctionDialog = ({
             <Grid size={{ sm: 7, xs: 12 }}>
               <Stack spacing={1}>
                 <Typography variant="h6" color="text.secondary" gutterBottom>
-                  Description
+                  {t("viewAuction.description")}
                 </Typography>
                 <Typography variant="body1" paragraph>
                   {product.description}
@@ -122,37 +125,37 @@ export const ViewAuctionDialog = ({
                 <Divider sx={{ my: 2 }} />
 
                 <Typography variant="h6" color="text.secondary" gutterBottom>
-                  Auction Details
+                  {t("viewAuction.details")}
                 </Typography>
                 <Typography>
-                  <strong>Base Price:</strong> ${product.basePrice}
+                  <strong>Base {t("viewAuction.price")}:</strong> ${product.basePrice}
                 </Typography>
                 {!isUpcoming && (
                   <Typography>
                     <strong>
                       {!isActive
-                        ? "Final Price"
-                        : "Current Price"}
+                        ? t("viewAuction.final")
+                        : t("viewAuction.current")}
                     </strong>{" "}
                     ${auction.currentPrice}
                   </Typography>
                 )}
 
                 <Typography>
-                  <strong>Start Time:</strong>{" "}
+                  <strong>{t("viewAuction.start")}:</strong>{" "}
                   {new Date(auction.startTime).toDateString()}
                 </Typography>
                 <Typography>
-                  <strong>End Time:</strong>{" "}
+                  <strong>{t("viewAuction.end")}:</strong>{" "}
                   {new Date(auction.endTime).toDateString()}
                 </Typography>
                 <Typography>
-                  <strong>Status:</strong> {isActive ? "Active" : "Inactive"}
+                  <strong>{t("viewAuction.status")}:</strong> {isActive ? t("viewAuction.active") : t("viewAuction.inactive")}
                 </Typography>
                 {isActive && (
                   <>
                     <Typography>
-                      <strong>Ends in:</strong>
+                      <strong>{t("viewAuction.endIn")}:</strong>
                     </Typography>
 
                     <CountdownTimer
@@ -163,7 +166,7 @@ export const ViewAuctionDialog = ({
                 {isUpcoming && (
                   <>
                     <Typography>
-                      <strong>Starts in:</strong>
+                      <strong>{t("viewAuction.startIn")}:</strong>
                     </Typography>
 
                     <CountdownTimer

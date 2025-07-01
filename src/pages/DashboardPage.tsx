@@ -16,11 +16,13 @@ import { FormDialog } from "../components/FormDialog.tsx";
 import { useDashboard } from "../hooks/useDashboard.ts";
 import { AuctionList } from "../components/AuctionsList.tsx";
 import { ViewAuctionDialog } from "../components/ViewAuctionDialog.tsx";
-import { useAuctionSSE } from "../hooks/useAuctionSSE.ts";
 import { ToastComponent } from "../components/ToastComponent.tsx";
 import { AuctionCard } from "../components/AuctionCard.tsx";
 
+import { useTranslation } from "react-i18next";
+
 export default function AuctionDashboardPage() {
+  const { t } = useTranslation();
   const { user } = useUser();
   const {
     setOpenFormAuction,
@@ -42,7 +44,7 @@ export default function AuctionDashboardPage() {
     <Container sx={{ py: 4 }}>
       <ToastComponent
         handleClose={() => setOpenToast(false)}
-        message="Bid saved successfully"
+        message={t("dashboard.saveAuction")}
         open={openToast}
         severity="success"
       />
@@ -54,7 +56,7 @@ export default function AuctionDashboardPage() {
           spacing={2}
           mb={4}
         >
-          <Typography variant="h4">Auctions Dashboard</Typography>
+          <Typography variant="h4">{t('dashboard.title')}</Typography>
           <Button
             variant="contained"
             startIcon={<AddCircleOutlineIcon />}
@@ -62,7 +64,7 @@ export default function AuctionDashboardPage() {
               setOpenFormAuction(true);
             }}
           >
-            Add Auction
+            {t('dashboard.addAuction')}
           </Button>
         </Stack>
       )}
@@ -75,7 +77,7 @@ export default function AuctionDashboardPage() {
           }}
         >
           <Typography variant="h4" gutterBottom>
-            LATEST AUCTIONS
+           {t('dashboard.latest')}
           </Typography>
         </Box>
         <Divider variant="middle" />
@@ -105,7 +107,7 @@ export default function AuctionDashboardPage() {
           }}
         >
           <Typography variant="h4" gutterBottom>
-            UPCOMING AUCTIONS
+            {t("dashboard.upcoming")}
           </Typography>
         </Box>
         <Divider variant="middle" />
@@ -130,7 +132,7 @@ export default function AuctionDashboardPage() {
           }}
         >
           <Typography variant="h4" gutterBottom>
-            PAST AUCTIONS
+            {t("dashboard.past")}
           </Typography>
         </Box>
         <Divider variant="middle" />
@@ -153,7 +155,7 @@ export default function AuctionDashboardPage() {
         open={openFormAuction}
         onClose={handleClose}
         onSubmit={formik.handleSubmit}
-        title="Create an Auction"
+        title={t("dashboard.createAuction")}
       >
         <Grid container spacing={2} alignItems="stretch">
           <Grid size={{ sm: 6, xs: 12 }}>
@@ -177,19 +179,19 @@ export default function AuctionDashboardPage() {
                 renderInput={(params) => (
                   <TextField
                     {...params}
-                    label="Select Product"
+                    label={t("dashboard.selectProduct")}
                     error={!!formik.errors.product && formik.touched.product}
                     helperText={
                       formik.touched.product &&
                       (formik.errors.product as string)
                     }
-                    placeholder="Select Product"
+                    placeholder={t("dashboard.selectProduct")}
                   />
                 )}
               />
 
               <TextField
-                label="Start Time"
+                label={t("dashboard.startTime")}
                 type="datetime-local"
                 fullWidth
                 InputLabelProps={{ shrink: true }}
@@ -201,7 +203,7 @@ export default function AuctionDashboardPage() {
               />
 
               <TextField
-                label="End Time"
+                label={t("dashboard.endTime")}
                 type="datetime-local"
                 fullWidth
                 InputLabelProps={{ shrink: true }}
@@ -213,7 +215,7 @@ export default function AuctionDashboardPage() {
               />
             </Stack>
           </Grid>
-          <Grid size={{ sm: 4, xs: 12 }} offset={{sm: 1}}>
+          <Grid size={{ sm: 4, xs: 12 }} offset={{ sm: 1 }}>
             {formik.values.product &&
               formik.values.startTime &&
               formik.values.endTime && (

@@ -1,22 +1,14 @@
-import { useParams } from "react-router-dom";
 import { Container, Grid, Paper, Typography } from "@mui/material";
 
-import { useProductsStore } from "../store/useProductsStore";
-import { useAuctionsStore } from "../store/useAuctionStore";
 import { ProductDetails } from "../components/ProductDetails";
 import { BidChat } from "../components/BidChat";
+import { useProductBidHistory } from "../hooks/useProductBidHistory";
+import { useTranslation } from "react-i18next";
 
 function ProductBidHistoryPage() {
-  const { auctionId } = useParams<{ auctionId: string }>();
+  const { product, auction, winnerBid, bids } = useProductBidHistory();
 
-  const products = useProductsStore((s) => s.products);
-  const { auctions, history } = useAuctionsStore((s) => s);
-
-  const auction = auctions.find((a) => a.id === auctionId);
-  const product = products.find((p) => p.id === auction?.product?.id);
-  const bids = history.filter((bid) => bid.auction.id === auctionId);
-
-  const winnerBid = bids.length > 0 ? bids[bids.length - 1] : null;
+  const {t} = useTranslation()
 
   return (
     <Container
@@ -68,7 +60,7 @@ function ProductBidHistoryPage() {
             }}
           >
             <Typography variant="h6" gutterBottom>
-              Bid History
+              {t("productBidHistory.title")}
             </Typography>
             <BidChat bids={bids} auction={auction} />
           </Paper>

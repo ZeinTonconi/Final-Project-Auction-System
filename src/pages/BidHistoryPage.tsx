@@ -2,7 +2,6 @@ import { Container, Grid } from "@mui/material";
 import { AuctionCard } from "../components/AuctionCard";
 import { useAuctionsStore } from "../store/useAuctionStore";
 import { useNavigate } from "react-router-dom";
-import { useUser } from "../contexts/userContext";
 
 function BidHistoryPage() {
   const auctions = useAuctionsStore((state) => state.auctions);

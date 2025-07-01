@@ -1,16 +1,15 @@
-import { useEffect, useState } from "react";
-import * as Yup from 'yup';
+import { useCallback, useEffect, useState } from "react";
+import * as Yup from "yup";
 import type { Auction } from "../interfaces/AuctionInterface";
 import { useAuctionsStore } from "../store/useAuctionStore";
 import { useProductsStore } from "../store/useProductsStore";
 import { useFormik } from "formik";
 import type { Product } from "../interfaces/ProductInterface";
 
-
 export const useDashboard = () => {
   const [openFormAuction, setOpenFormAuction] = useState(false);
-  const [selectedAuction, setSelectedAuction] = useState<null | Auction> (null);
-  const [openViewAuction, setOpenViewAuction] = useState(false)
+  const [selectedAuction, setSelectedAuction] = useState<null | Auction>(null);
+  const [openViewAuction, setOpenViewAuction] = useState(false);
 
   const [openToast, setOpenToast] = useState(false);
 
@@ -29,32 +28,6 @@ export const useDashboard = () => {
     d.setMinutes(d.getMinutes() - d.getTimezoneOffset());
     return d.toISOString().slice(0, 16);
   }
-
-  const handleView = (a: Auction) => {
-    setSelectedAuction(a);
-    setOpenViewAuction(true)
-  };
-  const handleEdit = (a: Auction) => {
-    setSelectedAuction(a);
-    formik.setValues({
-      ...a,
-      product: a.product!,
-      startTime: toDateTimeLocal(a.startTime),
-      endTime: toDateTimeLocal(a.endTime),
-    });
-    setOpenFormAuction(true);
-  };
-
-  const handleDelete = (a: Auction) => {
-    deleteAuction(a);
-  };
-
-  const handleClose = () => {
-    formik.resetForm();
-    setSelectedAuction(null);
-    setOpenFormAuction(false);
-    setOpenViewAuction(false)
-  };
 
   const auctionSchema = Yup.object({
     product: Yup.object().nullable().required("Please select a product"),
@@ -93,14 +66,46 @@ export const useDashboard = () => {
           ...selectedAuction,
           ...newAuction,
         });
-      else 
-        createAuction(newAuction);
+      else createAuction(newAuction);
 
-      setOpenToast(true)
+      setOpenToast(true);
 
       handleClose();
     },
   });
+
+  const handleView = useCallback((a: Auction) => {
+    setSelectedAuction(a);
+    setOpenViewAuction(true);
+  }, []);
+
+  const handleEdit = useCallback(
+    (a: Auction) => {
+      setSelectedAuction(a);
+      formik.setValues({
+        ...a,
+        product: a.product!,
+        startTime: toDateTimeLocal(a.startTime),
+        endTime: toDateTimeLocal(a.endTime),
+      });
+      setOpenFormAuction(true);
+    },
+    [formik]
+  );
+
+  const handleDelete = useCallback(
+    (a: Auction) => {
+      deleteAuction(a);
+    },
+    [deleteAuction]
+  );
+
+  const handleClose = useCallback(() => {
+    formik.resetForm();
+    setSelectedAuction(null);
+    setOpenFormAuction(false);
+    setOpenViewAuction(false);
+  }, [formik]);
 
   return {
     setOpenFormAuction,
@@ -115,6 +120,6 @@ export const useDashboard = () => {
     openViewAuction,
     selectedAuction,
     openToast,
-    setOpenToast
-  }
+    setOpenToast,
+  };
 };

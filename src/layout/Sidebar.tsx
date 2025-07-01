@@ -16,6 +16,7 @@ import LogoutIcon from "@mui/icons-material/Logout";
 import GroupIcon from "@mui/icons-material/Group";
 import PaidIcon from "@mui/icons-material/Paid";
 import { useUser } from "../contexts/userContext.tsx";
+import { useTranslation } from "react-i18next";
 
 const drawerWidth = 240;
 
@@ -32,6 +33,7 @@ const Sidebar = ({
 }: SidebarProps) => {
   const location = useLocation();
   const { logout, user } = useUser();
+  const {t} = useTranslation()
   const drawer = (
     <div>
       <Toolbar />
@@ -58,7 +60,7 @@ const Sidebar = ({
             <ListItemIcon>
               <PaidIcon />
             </ListItemIcon>
-            <ListItemText primary="Auctions" />
+            <ListItemText primary={t("sidebar.auctions")} />
           </ListItemButton>
         </ListItem>
 
@@ -73,7 +75,7 @@ const Sidebar = ({
                 <ListItemIcon>
                   <BusinessCenterIcon />
                 </ListItemIcon>
-                <ListItemText primary="Manage Products" />
+                <ListItemText primary={t("sidebar.products")} />
               </ListItemButton>
             </ListItem>
             <ListItem disablePadding>
@@ -85,7 +87,7 @@ const Sidebar = ({
                 <ListItemIcon>
                   <GroupIcon />
                 </ListItemIcon>
-                <ListItemText primary="Manage Users" />
+                <ListItemText primary={t("sidebar.users")} />
               </ListItemButton>
             </ListItem>
           </>
@@ -96,7 +98,7 @@ const Sidebar = ({
             <ListItemIcon>
               <LogoutIcon />
             </ListItemIcon>
-            <ListItemText primary="Logout" />
+            <ListItemText primary={t("sidebar.logout")} />
           </ListItemButton>
         </ListItem>
       </List>

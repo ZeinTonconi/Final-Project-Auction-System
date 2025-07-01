@@ -1,7 +1,8 @@
-import { Card, CardMedia, CardContent, Typography } from "@mui/material";
+import { Card, CardMedia, CardContent, Typography, Box } from "@mui/material";
 import type { Auction } from "../interfaces/AuctionInterface";
 import { AuctionCardTimer } from "./AuctionCardTimer";
 import { AuctionCardActions } from "./AuctionCardActions";
+import { useTranslation } from "react-i18next";
 
 interface AuctionCardProps {
   auction: Auction;
@@ -30,12 +31,13 @@ export const AuctionCard = ({
   const isActive = !isPast && !isUpcoming;
 
   const { product } = auction;
+  const { t } = useTranslation();
 
   const statusLabel = isPast
-    ? "Auction Ended"
+    ? `${t("auctionCard.auctionEnd")}    `
     : isUpcoming
-    ? "Sealed Bid Auction"
-    : `Current Bid: $${auction.currentPrice.toFixed(2)}`;
+    ? t("auctionCard.auctionSealed")
+    : `${t("auctionCard.auctionCurrent")}: $${auction.currentPrice.toFixed(2)}`;
 
   return (
     <Card sx={{ position: "relative", boxShadow: 3 }} onClick={onClick}>
@@ -63,9 +65,29 @@ export const AuctionCard = ({
         <Typography variant="h6" gutterBottom>
           {product!.title}
         </Typography>
-        <Typography variant="body2" color="text.secondary">
-          {statusLabel}
-        </Typography>
+
+        <Box>
+          {isPast ? (
+            <>
+              <Typography variant="body2" color="text.secondary">
+                {statusLabel}
+              </Typography>
+              <Typography variant="body2" color="text.secondary">
+                {t("auctionCard.price")}: {auction.currentPrice}
+              </Typography>
+              <Typography variant="body2" color="text.secondary">
+                {t("auctionCard.start")}: {new Date(auction.startTime).toDateString()}
+              </Typography>
+              <Typography variant="body2" color="text.secondary">
+                {t("auctionCard.end")}: {new Date(auction.endTime).toDateString()}
+              </Typography>
+            </>
+          ) : (
+            <Typography variant="body2" color="text.secondary">
+              {statusLabel}
+            </Typography>
+          )}
+        </Box>
       </CardContent>
     </Card>
   );

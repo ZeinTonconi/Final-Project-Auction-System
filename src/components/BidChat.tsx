@@ -13,6 +13,7 @@ import { useEffect, useRef, useState } from "react";
 import { useUser } from "../contexts/userContext";
 import { useAuctionsStore } from "../store/useAuctionStore";
 import { useAuctionSSE } from "../hooks/useAuctionSSE";
+import { useTranslation } from "react-i18next";
 
 interface BidChatProps {
   bids: Bid[];
@@ -23,6 +24,8 @@ export const BidChat = ({ bids, auction }: BidChatProps) => {
   const [bidAmount, setBidAmount] = useState("");
   const { user } = useUser();
 
+  const {t} = useTranslation()
+
   useAuctionSSE();
 
   const isActive =
@@ -30,15 +33,15 @@ export const BidChat = ({ bids, auction }: BidChatProps) => {
     new Date(auction.startTime).getTime() <= Date.now() &&
     Date.now() <= new Date(auction.endTime).getTime();
 
-  let placeholder = "Enter your bid...";
+  let placeholder = t("bidChat.placeholder");
   let disabled = !isActive || user?.role === "admin";
   if (!isActive) {
     placeholder =
       auction && new Date(auction.endTime).getTime() < Date.now()
-        ? "Auction has ended"
-        : "Auction not started yet";
+        ? t("bidChat.end")
+        : t("bidChat.start");
   } else if (user?.role === "admin") {
-    placeholder = "Admins cannot place bids";
+    placeholder = t("bidChat.placeholder");
   }
 
   const bottomRef = useRef<HTMLDivElement>(null);
@@ -75,7 +78,7 @@ export const BidChat = ({ bids, auction }: BidChatProps) => {
         </Paper>
       ))}
       <Stack direction="row">
-        <Typography color="error">Current Bid:  </Typography> 
+        <Typography color="error">{t("bidChat.current")}  </Typography> 
         <Typography>$ {auction?.currentPrice}</Typography>
       </Stack>
 
@@ -84,7 +87,7 @@ export const BidChat = ({ bids, auction }: BidChatProps) => {
       {user?.role !== "admin" && (
         <Stack direction="row" spacing={1}>
           <TextField
-            label="Place your bid"
+            label={t("bidChat.placeBid")}
             placeholder={placeholder}
             variant="outlined"
             size="small"
@@ -103,7 +106,7 @@ export const BidChat = ({ bids, auction }: BidChatProps) => {
               parseFloat(bidAmount) <= (auction?.currentPrice ?? 0)
             }
           >
-            Bid
+            {t("bidChat.bid")}
           </Button>
         </Stack>
       )}
