@@ -1,10 +1,14 @@
-import { Routes, Route, Outlet } from "react-router-dom";
+import { Routes, Route } from "react-router-dom";
 import LoginPage from "../pages/LoginPage.tsx";
-import DashboardPage from "../pages/user/DashboardPage.tsx";
 import { RolesGuard } from "../guards/RolesGuard.tsx";
 import { Layout } from "../layout/Layout.tsx";
 import AuctionDashboardPage from "../pages/DashboardPage.tsx";
-import BidHistoryPage from "../pages/user/BidHistoryPage.tsx";
+import BidHistoryPage from "../pages/BidHistoryPage.tsx";
+import ProductBidHistoryPage from "../pages/ProductBidHistoryPage.tsx";
+import { ErrorBoundary } from "react-error-boundary";
+import { BetButton } from "../components/BetButton.tsx";
+import OhNoPage from "../pages/OhNoPage.tsx";
+
 
 export const PublicRoutes = () => {
   return (
@@ -12,13 +16,19 @@ export const PublicRoutes = () => {
       <Route path="/" element={<LoginPage />} />
       <Route
         element={
-          <RolesGuard requiredRole="user">
+          <RolesGuard>
             <Layout />
           </RolesGuard>
         }
       >
         <Route path="dashboard" element={<AuctionDashboardPage />} />
-        <Route path="auctions" element={<BidHistoryPage />} />
+        <Route path="auctions" element={
+                <ErrorBoundary FallbackComponent={OhNoPage}>
+                  <BidHistoryPage />
+                  <BetButton/>
+                </ErrorBoundary>
+          } />
+        <Route path="/bid-history/:auctionId" element={<ProductBidHistoryPage />} />
       </Route>
     </Routes>
   );

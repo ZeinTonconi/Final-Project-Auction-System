@@ -1,19 +1,13 @@
+import type { Auction } from "./AuctionInterface";
+import type { User } from "./UserInterface";
 
-export interface AuctionSummary {
-  id: string;
-  productId: string;
-  startTime: string;
-  endTime: string;
-  currentPrice: number;
-  isActive: boolean;
-  userId: string;
-  lastBid: string;
-}
 
 export interface Bid {
-  id: number;
+  id?: number;
   amount: number;
   userId: string;
+  auctionId: string
   timestamp: string;
-  auction: AuctionSummary;
+  auction: Auction;
+  user?: User
 }

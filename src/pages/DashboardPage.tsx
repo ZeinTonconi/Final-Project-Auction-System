@@ -17,10 +17,11 @@ import { useDashboard } from "../hooks/useDashboard.ts";
 import { AuctionList } from "../components/AuctionsList.tsx";
 import { ViewAuctionDialog } from "../components/ViewAuctionDialog.tsx";
 import { useAuctionSSE } from "../hooks/useAuctionSSE.ts";
+import { ToastComponent } from "../components/ToastComponent.tsx";
+import { AuctionCard } from "../components/AuctionCard.tsx";
 
 export default function AuctionDashboardPage() {
   const { user } = useUser();
-  useAuctionSSE();
   const {
     setOpenFormAuction,
     auctions,
@@ -33,10 +34,18 @@ export default function AuctionDashboardPage() {
     products,
     openViewAuction,
     selectedAuction,
+    openToast,
+    setOpenToast,
   } = useDashboard();
 
   return (
     <Container sx={{ py: 4 }}>
+      <ToastComponent
+        handleClose={() => setOpenToast(false)}
+        message="Bid saved successfully"
+        open={openToast}
+        severity="success"
+      />
       {user?.role === "admin" && (
         <Stack
           direction={{ xs: "column", sm: "row" }}
@@ -80,6 +89,7 @@ export default function AuctionDashboardPage() {
             )
             .map((auc) => (
               <AuctionList
+                key={auc.id}
                 auc={auc}
                 handleView={() => handleView(auc)}
                 handleEdit={() => handleEdit(auc)}
@@ -104,6 +114,7 @@ export default function AuctionDashboardPage() {
             .filter((auc) => Date.now() < new Date(auc.startTime).getTime())
             .map((auc) => (
               <AuctionList
+                key={auc.id}
                 auc={auc}
                 handleView={() => handleView(auc)}
                 handleEdit={() => handleEdit(auc)}
@@ -128,6 +139,7 @@ export default function AuctionDashboardPage() {
             .filter((auc) => Date.now() > new Date(auc.endTime).getTime())
             .map((auc) => (
               <AuctionList
+                key={auc.id}
                 auc={auc}
                 handleView={() => handleView(auc)}
                 handleEdit={() => handleEdit(auc)}
@@ -201,29 +213,32 @@ export default function AuctionDashboardPage() {
               />
             </Stack>
           </Grid>
-          <Grid size={{ sm: 6, xs: 12 }}>
-            {/* TODO AGREGAR CARD PREVIEW */}
-            {/* {formik.errors && <AuctionCard
-                  auction={
-                    
-                    productId: string;
-        startTime: string;
-    endTime: string;
-    currentPrice: number;
-    isActive: boolean;
-    product?: Product
-
-                  }
-                  
-                />} */}
+          <Grid size={{ sm: 4, xs: 12 }} offset={{sm: 1}}>
+            {formik.values.product &&
+              formik.values.startTime &&
+              formik.values.endTime && (
+                <AuctionCard
+                  auction={{
+                    productId: formik.values.product.id!,
+                    currentPrice: formik.values.product.basePrice,
+                    startTime: formik.values.startTime,
+                    endTime: formik.values.endTime,
+                    product: formik.values.product,
+                  }}
+                  showActions={false}
+                  showTimer={true}
+                />
+              )}
           </Grid>
         </Grid>
       </FormDialog>
-      {selectedAuction && <ViewAuctionDialog
-        open={openViewAuction}
-        handleClose={handleClose}
-        auction={selectedAuction!}
-      />}
+      {selectedAuction && (
+        <ViewAuctionDialog
+          open={openViewAuction}
+          handleClose={handleClose}
+          auction={selectedAuction!}
+        />
+      )}
     </Container>
   );
 }

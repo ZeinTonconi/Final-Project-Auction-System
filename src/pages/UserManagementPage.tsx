@@ -11,15 +11,15 @@ import {
   Checkbox,
 } from "@mui/material";
 import { useEffect, useState } from "react";
-import { UsersTable } from "../../components/UsersTable";
-import { type User } from "../../interfaces/UserInterface";
+import { UsersTable } from "../components/UsersTable";
+import { type User } from "../interfaces/UserInterface";
 import {
   createUserService,
   deleteUserService,
   getUsersService,
   updateUserService,
-} from "../../services/userService";
-import { FormDialog } from "../../components/FormDialog";
+} from "../services/userService";
+import { FormDialog } from "../components/FormDialog";
 import { useFormik } from "formik";
 import * as Yup from "yup";
 

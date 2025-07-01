@@ -1,7 +1,10 @@
 import jsonServerInstance from "../api/jsonServerInstance.ts";
+import { useUser } from "../contexts/userContext.tsx";
 import type { Auction } from "../interfaces/AuctionInterface.ts";
 import type { Product } from "../interfaces/ProductInterface.ts";
+import type { User } from "../interfaces/UserInterface.ts";
 import { getProductsService } from "./productService.ts";
+import { getUsersService } from "./userService.ts";
 
 const AUCTION_URL = "auctions";
 
@@ -19,6 +22,7 @@ export const getAuctionsWithProduct = async () => {
   try {
     const auctions = await getAuctionsService();
     const products = await getProductsService();
+ 
     return auctions.map((auction: Auction) => {
       const product = products.find((p: Product) => p.id === auction.productId);
       return {
@@ -26,6 +30,18 @@ export const getAuctionsWithProduct = async () => {
         product,
       };
     });
+  } catch (error) {
+    console.error("Error getting auctions with product:", error);
+    throw error;
+  }
+};
+
+export const getAuctionsById = async (auctionId: string) => {
+  try {
+    const auctions = await getAuctionsWithProduct();
+ 
+    return auctions.find((auction: Auction) => auction.id === auctionId)
+
   } catch (error) {
     console.error("Error getting auctions with product:", error);
     throw error;
@@ -65,18 +81,18 @@ export const deleteAuctionService = async (id: string) => {
   }
 };
 
-export const updateBidService = async (auction: Auction) => {
+export const updateBidService = async (auction: Auction, user: User) => {
   try {
     const res = await updateAuctionService(auction);
-    await jsonServerInstance.post("bids", {
-      auction,
+
+    const bid = await jsonServerInstance.post("bids", {
+      auctionId: auction.id,
       amount: res.currentPrice,
       userId: res.userId,
       timestamp: new Date(Date.now()).toISOString(),
     });
-    return res
+    return bid.data;
   } catch (error) {
     console.error(error)
-
   }
 };

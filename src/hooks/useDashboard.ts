@@ -12,6 +12,8 @@ export const useDashboard = () => {
   const [selectedAuction, setSelectedAuction] = useState<null | Auction> (null);
   const [openViewAuction, setOpenViewAuction] = useState(false)
 
+  const [openToast, setOpenToast] = useState(false);
+
   const { auctions, getAuctions, createAuction, deleteAuction, updateAuction } =
     useAuctionsStore((state) => state);
 
@@ -83,7 +85,6 @@ export const useDashboard = () => {
         startTime: new Date(values.startTime).toISOString(),
         endTime: new Date(values.endTime).toISOString(),
         currentPrice: values.product!.basePrice,
-        isActive: false,
         product: values.product!,
       };
 
@@ -94,6 +95,8 @@ export const useDashboard = () => {
         });
       else 
         createAuction(newAuction);
+
+      setOpenToast(true)
 
       handleClose();
     },
@@ -110,6 +113,8 @@ export const useDashboard = () => {
     formik,
     products,
     openViewAuction,
-    selectedAuction
+    selectedAuction,
+    openToast,
+    setOpenToast
   }
 };

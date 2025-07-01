@@ -6,6 +6,5 @@ export interface Auction {
     startTime: string;
     endTime: string;
     currentPrice: number;
-    isActive: boolean;
     product?: Product
 }

@@ -3,11 +3,16 @@ import type { Auction } from "../interfaces/AuctionInterface";
 import {
   createAuctionService,
   deleteAuctionService,
+  getAuctionsById,
+  getAuctionsService,
   getAuctionsWithProduct,
   updateAuctionService,
   updateBidService,
 } from "../services/auctionService";
-import type { Bid } from "../interfaces/HistoryInterface";
+import type { Bid } from "../interfaces/BidInterface";
+import { getHistoryService } from "../services/bidService";
+import type { User } from "../interfaces/UserInterface";
+import { getUserByIdService } from "../services/userService";
 
 interface AuctionsStore {
   auctions: Auction[];
@@ -18,7 +23,7 @@ interface AuctionsStore {
   updateAuction: (auction: Auction) => void;
   deleteAuction: (auction: Auction) => void;
   updateBid: (
-    auction: Auction,
+    auctinId: string,
     newBid: number,
     newWinner: string,
     timestamp: string
@@ -27,7 +32,8 @@ interface AuctionsStore {
     auction: Auction,
     newBid: number,
     newWinner: string,
-    timestamp: string
+    timestamp: string,
+    user: User
   ) => void;
 }
 
@@ -37,7 +43,10 @@ export const useAuctionsStore = create<AuctionsStore>((set) => ({
   getAuctions: async () => {
     try {
       const res = await getAuctionsWithProduct();
-      set({ auctions: res });
+
+      const hist = await getHistoryService();
+
+      set({ auctions: res, history: hist });
     } catch (error) {
       console.error(error);
     }
@@ -92,29 +101,35 @@ export const useAuctionsStore = create<AuctionsStore>((set) => ({
     }
   },
   updateBid: async (
-    auction: Auction,
+    auctionId: string,
     newBid: number,
     newWinner: string,
-    timestamp: string
+    timestamp: string,
   ) => {
     try {
-      const newAuction = {
+      const auction = await getAuctionsById(auctionId)
+      const user = await getUserByIdService(newWinner)
+
+      const newAuction: Auction = {
         ...auction,
-        currentPrice: newBid,
-        userId: newWinner,
-        lastBid: timestamp,
+        currentPrice: newBid
       };
+
+      const bid: Bid = {
+       amount: newBid,
+       auction: auction,
+       auctionId: auctionId,
+       timestamp: timestamp,
+       userId: newWinner,
+       user: user 
+      }
 
       set((prev) => ({
         auctions: prev.auctions.map((auct: Auction) =>
           auct.id === newAuction.id ? newAuction : auct
         ),
-        // history: [...prev.history, {
-        //     auctionId: newAuction.id,
-        //     bid: newBid,
-        //     bidderId: newWinner,
-        //     time: timestamp
-        // }]
+        history: [...prev.history, bid]
+
       }));
     } catch (error) {
       console.error(error);
@@ -122,31 +137,34 @@ export const useAuctionsStore = create<AuctionsStore>((set) => ({
   },
   makeBid: async (
     auction: Auction,
-    newBid: number,
+    newAmount: number,
     newWinner: string,
-    timestamp: string
+    timestamp: string,
+    user: User
   ) => {
     try {
       const newAuction = {
         ...auction,
-        currentPrice: newBid,
+        currentPrice: newAmount,
         userId: newWinner,
         lastBid: timestamp,
       };
 
-      await updateBidService(newAuction);
+      const newBid: Bid = await updateBidService(newAuction, user);
 
-      set((prev) => ({
-        auctions: prev.auctions.map((auct: Auction) =>
-          auct.id === newAuction.id ? newAuction : auct
-        ),
-        // history: [...prev.history, {
-        //     auctionId: newAuction.id,
-        //     bid: newBid,
-        //     bidderId: newWinner,
-        //     time: timestamp
-        // }]
-      }));
+      // const bid: Bid = {
+      //   ...newBid,
+      //   auction,
+      //   user
+      // }
+      
+
+      // set((prev) => ({
+      //   auctions: prev.auctions.map((auct: Auction) =>
+      //     auct.id === newAuction.id ? newAuction : auct
+      //   ),
+      //   history: [...prev.history, bid]
+      // }));
     } catch (error) {
       console.error(error);
     }

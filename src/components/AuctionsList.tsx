@@ -1,6 +1,7 @@
 import { Grid } from "@mui/material";
 import type { Auction } from "../interfaces/AuctionInterface";
 import { AuctionCard } from "./AuctionCard";
+import { useNavigate } from "react-router-dom";
 
 interface AuctionListProps {
   auc: Auction;
@@ -16,7 +17,6 @@ export const AuctionList = ({ auc, handleView, handleDelete, handleEdit }: Aucti
     <Grid size={{ xs: 12, sm: 6, md: 4, lg: 3 }} key={auc.id}>
       <AuctionCard
         auction={auc}
-        product={prod}
         onView={handleView}
         onEdit={handleEdit}
         onDelete={handleDelete}

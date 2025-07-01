@@ -14,6 +14,16 @@ export const getProductsService = async () => {
     }
 }
 
+export const getProductByIdService = async (id: string) => {
+    try {
+        const res = await jsonServerInstance.get(`${PRODUCTS_URL}/${id}`);
+        return res.data;
+    } catch (error) {
+        console.error("Error getting products:", error);
+        throw error;
+    }
+}
+
 export const createProductService = async (product: Product) => {
     try {
         const res = await jsonServerInstance.post(PRODUCTS_URL, product);

@@ -6,7 +6,7 @@ export const loginService = async (username: string, role: string) => {
     try {
         const res = await  jsonServerInstance.get(`${USERS_URL}?username=${username}&&role=${role}`);
         if(res.data.length === 0)
-            return {};
+            return null;
         return res.data[0];
     } catch (error) {
         console.error("Error login user:", error);

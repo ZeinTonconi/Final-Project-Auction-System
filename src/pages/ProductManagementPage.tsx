@@ -9,10 +9,10 @@ import {
 } from "@mui/material";
 import {useFormik} from "formik";
 import * as Yup from "yup";
-import {FormDialog} from "../../components/FormDialog.tsx";
-import {ProductsTable} from "../../components/ProductsTable.tsx";
-import type { Product } from "../../interfaces/ProductInterface.ts";
-import { useProductsStore } from "../../store/useProductsStore.ts";
+import {FormDialog} from "../components/FormDialog.tsx";
+import {ProductsTable} from "../components/ProductsTable.tsx";
+import type { Product } from "../interfaces/ProductInterface.ts";
+import { useProductsStore } from "../store/useProductsStore.ts";
 
 function ProductManagementPage() {
 

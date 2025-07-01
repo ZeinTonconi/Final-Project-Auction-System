@@ -8,11 +8,14 @@ export function useAuctionSSE() {
     const es = new EventSource("http://localhost:3000/events");
 
     es.onmessage = (event) => {
+      console.log("Recieved Bid")
       try {
         const parsed = JSON.parse(event.data);
+        console.log("Bid parsed", parsed)
         if (parsed.type === "new_bid") {
           const bid = parsed.bid;
-          updateBid(bid.auction, bid.amount, bid.userId, bid.timestamp);
+
+          updateBid(bid.auctionId, bid.amount, bid.userId, bid.timestamp);
         }
       } catch (err) {
         console.error("Failed to parse SSE", err);

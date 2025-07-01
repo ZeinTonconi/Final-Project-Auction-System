@@ -35,8 +35,8 @@ function LoginPage() {
 
     const formik = useFormik<LoginFormValues>({
         initialValues: {
-            username: "zein",
-            role: "admin",
+            username: "hade",
+            role: "user",
             avatar: "",
         },
         validationSchema: loginSchema,

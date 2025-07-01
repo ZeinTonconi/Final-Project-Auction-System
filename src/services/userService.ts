@@ -14,6 +14,16 @@ export const getUsersService = async () => {
     }
 }
 
+export const getUserByIdService = async (userId: string) => {
+    try {
+        const users = await getUsersService();
+        return users.find((user:User) => user.id == userId)
+    } catch (error) {
+        console.error("Error getting users:", error);
+        throw error;
+    }
+}
+
 export const createUserService = async (user: User) => {
     try {
         const res = await jsonServerInstance.post(USERS_URL, user);
