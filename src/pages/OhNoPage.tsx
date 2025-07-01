@@ -18,17 +18,17 @@ export default function OhNoPage({ error, resetErrorBoundary }: OhNoPageProps) {
   return (
     <Container sx={{ mt: 8, textAlign: "center" }}>
       <Typography variant="h3" gutterBottom>
-        😵 {t("login.title")}
+        😵 {t("ohNo.title")}
       </Typography>
       <Typography color="text.secondary" gutterBottom>
         {error.message}
       </Typography>
       <Stack direction="row" justifyContent="center" spacing={2} mt={4}>
         <Button variant="contained" onClick={handleGoHome}>
-          {t("login.back")}
+          {t("ohNo.back")}
         </Button>
         <Button variant="outlined" onClick={resetErrorBoundary}>
-          {t("login.tryAgain")}
+          {t("ohNo.tryAgain")}
         </Button>
       </Stack>
     </Container>

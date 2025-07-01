@@ -118,3 +118,5 @@ Donde esta los detalles del producto y un historial de las pujas de los usuarios
 * **Uso de context**: Se utilizo un contexto para guardar la sesion del usuario
 * **Zustand**: Se utilizo zustand para guardar los productos y asi cada vez que se modifique la lista de productos no haya la necesidad de volver a llamar al backend. Tambien se utilizo para guardar las subastas y las pujas.
 * **i18n**: Tambien se utilizo el i18n para la internacionalizacion.
+## Video Demo
+![Video](demo.mkv)

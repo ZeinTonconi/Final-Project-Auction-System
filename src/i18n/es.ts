@@ -4,7 +4,7 @@ export const esJSON = {
     title: "Panel de Subastas",
     addAuction: "Agregar Subasta",
     latest: "ÚLTIMAS SUBASTAS",
-    Upcoming: "PRÓXIMAS SUBASTAS",
+    upcoming: "PRÓXIMAS SUBASTAS",
     past: "SUBASTAS PASADAS",
     createAuction: "Crear una Subasta",
     selectProduct: "Seleccionar Producto",

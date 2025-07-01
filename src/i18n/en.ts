@@ -4,7 +4,7 @@ export const enJSON = {
     title: "Auctions Dashboard",
     addAuction: "Add Auction",
     latest: "LATEST AUCTIONS",
-    Upcoming: "UPCOMING AUCTIONS",
+    upcoming: "UPCOMING AUCTIONS",
     past: "PAST AUCTIONS",
     createAuction: "Create an Auction",
     selectProduct: "Select Product",
